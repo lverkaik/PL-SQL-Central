@@ -13,7 +13,7 @@ CREATE TABLE error_log (
 );
 /
 
-CREATE OR REPLACE PACKAGE error_log_api IS
+CREATE OR REPLACE PACKAGE error_log_pkg IS
     business_object_ CONSTANT VARCHAR2(30) := 'ErrorLog';
 
   --Log an error, can be called from anywhere in the application
@@ -29,10 +29,10 @@ CREATE OR REPLACE PACKAGE error_log_api IS
         days_past_ IN NUMBER
     );
 
-END error_log_api;
+END error_log_pkg;
 /
 
-CREATE OR REPLACE PACKAGE BODY error_log_api IS
+CREATE OR REPLACE PACKAGE BODY error_log_pkg IS
 
   --Log an error, can be called from anywhere in the application
 
@@ -80,4 +80,4 @@ CREATE OR REPLACE PACKAGE BODY error_log_api IS
 
     END clean_up;
 
-END error_log_api;
+END error_log_pkg;
