@@ -1,0 +1,39 @@
+CREATE OR REPLACE PACKAGE APPLICATION_ERROR_PKG AS
+
+/*
+Purpose:  package handles application errors
+
+Remarks:
+
+*/
+
+-- raise exception if condition is not true
+    PROCEDURE ASSERT (
+        P_CONDITION      IN  BOOLEAN,
+        P_ERROR_MESSAGE  IN  VARCHAR2
+    );
+
+END APPLICATION_ERROR_PKG;
+/
+
+CREATE OR REPLACE PACKAGE BODY APPLICATION_ERROR_PKG AS
+
+--raise exception if not true
+    PROCEDURE ASSERT (
+        P_CONDITION      IN  BOOLEAN,
+        P_ERROR_MESSAGE  IN  VARCHAR2
+    ) AS
+    BEGIN
+        IF NOT NVL(
+                  P_CONDITION,
+                  FALSE
+               ) THEN
+            RAISE_APPLICATION_ERROR(
+                                   -20000,
+                                   P_ERROR_MESSAGE
+            );
+        END IF;
+    END ASSERT;
+
+END APPLICATION_ERROR_PKG;
+/
