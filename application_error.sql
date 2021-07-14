@@ -13,16 +13,17 @@ CREATE TABLE application_error_log (
 );
 /
 
-CREATE OR REPLACE PACKAGE APPLICATION_ERROR_PKG AS
+CREATE OR REPLACE PACKAGE application_error_pkg AS
 
 -- raise exception if condition is not true
-    PROCEDURE ASSERT (
-        P_CONDITION      IN  BOOLEAN,
-        P_ERROR_MESSAGE  IN  VARCHAR2
+    PROCEDURE assert (
+        p_condition       IN BOOLEAN,
+        p_error_message   IN VARCHAR2
     );
 
 
   --Log an error, can be called from anywhere in the application
+
     PROCEDURE log_error (
         business_object_   IN VARCHAR2,
         error_info_        IN VARCHAR2
@@ -34,28 +35,26 @@ CREATE OR REPLACE PACKAGE APPLICATION_ERROR_PKG AS
     PROCEDURE clean_up (
         days_past_ IN NUMBER
     );
-    
-END APPLICATION_ERROR_PKG;
+
+END application_error_pkg;
 /
 
-CREATE OR REPLACE PACKAGE BODY APPLICATION_ERROR_PKG AS
+CREATE OR REPLACE PACKAGE BODY application_error_pkg AS
 
 --raise exception if not true
-    PROCEDURE ASSERT (
-        P_CONDITION      IN  BOOLEAN,
-        P_ERROR_MESSAGE  IN  VARCHAR2
-    ) AS
+
+    PROCEDURE assert (
+        p_condition       IN BOOLEAN,
+        p_error_message   IN VARCHAR2
+    )
+        AS
     BEGIN
-        IF NOT NVL(
-                  P_CONDITION,
-                  FALSE
-               ) THEN
-            RAISE_APPLICATION_ERROR(
-                                   -20000,
-                                   P_ERROR_MESSAGE
-            );
+        IF
+            NOT nvl(p_condition,false)
+        THEN
+            raise_application_error(-20000,p_error_message);
         END IF;
-    END ASSERT;
+    END assert;
 
 
   --Log an error, can be called from anywhere in the application
@@ -103,6 +102,6 @@ CREATE OR REPLACE PACKAGE BODY APPLICATION_ERROR_PKG AS
             created < ( SYSDATE - days_past_ );
 
     END clean_up;
-    
-END APPLICATION_ERROR_PKG;    
+
+END application_error_pkg;
 /
